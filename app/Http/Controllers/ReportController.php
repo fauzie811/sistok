@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Expense;
 use App\Transaction;
+use App\TransactionDetail;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -18,7 +19,7 @@ class ReportController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request)
+    public function financial(Request $request)
     {
         $date_start = $request->has('date_start') ? $request->date_start : date('Y-m') . '-01';
         $date_end = $request->has('date_end') ? $request->date_end : date('Y-m-d');
@@ -36,8 +37,22 @@ class ReportController extends Controller
         $items = collect();
         $items = $items->merge($transactions)->merge($expenses)->sortBy('date');
 
-        return view('reports', compact([
+        return view('reports.financial', compact([
             'date_start', 'date_end', 'items', 'old_balance',
+        ]));
+    }
+
+    public function sales(Request $request)
+    {
+        $date_start = $request->has('date_start') ? $request->date_start : date('Y-m') . '-01';
+        $date_end = $request->has('date_end') ? $request->date_end : date('Y-m-d');
+
+        $items = TransactionDetail::with(['transaction', 'stock', 'stock.product'])->whereHas('transaction', function ($q) use ($date_start, $date_end) {
+            $q->where('type', 'out')->whereBetween('date', [$date_start, $date_end]);
+        })->get()->sortByDesc('transaction.date');
+
+        return view('reports.sales', compact([
+            'date_start', 'date_end', 'items',
         ]));
     }
 }

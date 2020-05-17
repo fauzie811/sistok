@@ -88,22 +88,22 @@ Detail Barang Keluar - #{{ $transaction->id }}
                                 <td>{{ $detail->stock->created_at }}</td>
                                 <td class="text-right">{{ rupiah($detail->stock->purchase_price) }}</td>
                                 <td class="text-center">{{ $detail->quantity }}</td>
-                                <td class="text-right">{{ rupiah($detail->total) }}</td>
+                                <td class="text-right">{{ rupiah($detail->total_purchase) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td class="text-right font-weight-bold" colspan="3">Total Harga Beli</td>
-                                <td class="text-right font-weight-bold text-danger">{{ rupiah($transaction->details->sum('total')) }}</td>
+                                <td class="text-right font-weight-bold text-danger">{{ rupiah($transaction->details->sum('total_purchase')) }}</td>
                             </tr>
                             <tr>
-                                <td class="text-right font-weight-bold" colspan="3">Harga Jual</td>
+                                <td class="text-right font-weight-bold" colspan="3">Total Harga Jual</td>
                                 <td class="text-right font-weight-bold text-success">{{ rupiah($transaction->total) }}</td>
                             </tr>
                             <tr>
-                                <td class="text-right font-weight-bold" colspan="3">Laba Kotor</td>
-                                <td class="text-right font-weight-bold text-primary">{{ rupiah($transaction->total - $transaction->details->sum('total')) }}</td>
+                                <td class="text-right font-weight-bold" colspan="3">Laba</td>
+                                <td class="text-right font-weight-bold text-primary">{{ rupiah($transaction->total - $transaction->details->sum('total_purchase')) }}</td>
                             </tr>
                         </tfoot>
                     </table>

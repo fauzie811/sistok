@@ -54,8 +54,9 @@ Detail Barang - {{ $product->name }}
                         <thead>
                             <tr>
                                 <th>Tanggal Masuk</th>
-                                <th class="text-right">Harga Beli</th>
                                 <th class="text-center">Sisa Stok</th>
+                                <th class="text-right">Harga Beli</th>
+                                <th class="text-right">Laba</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,8 +64,9 @@ Detail Barang - {{ $product->name }}
                         @if ($stock->stock > 0)                            
                         <tr>
                             <td>{{ $stock->transaction->date }}</td>
-                            <td class="text-right">{{ rupiah($stock->purchase_price) }}</td>
                             <td class="text-center">{{ $stock->stock }}</td>
+                            <td class="text-right">{{ rupiah($stock->purchase_price) }}</td>
+                            <td class="text-right">{{ rupiah($product->price - $stock->purchase_price) }}</td>
                         </tr>
                         @endif
                         @endforeach

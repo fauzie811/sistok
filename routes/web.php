@@ -28,4 +28,5 @@ Route::get('products/ajax', 'ProductController@ajax')->name('products.ajax');
 Route::resource('products', 'ProductController');
 Route::resource('transactions', 'TransactionController');
 Route::resource('expenses', 'ExpenseController');
-Route::get('reports', 'ReportController@index')->name('reports');
+Route::get('reports/sales', 'ReportController@sales')->name('reports.sales');
+Route::get('reports/financial', 'ReportController@financial')->name('reports.financial');

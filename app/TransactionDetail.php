@@ -10,11 +10,16 @@ class TransactionDetail extends Model
         'transaction_id', 'stock_id', 'quantity',
     ];
 
-    protected $appends = ['total'];
+    protected $appends = ['total', 'total_purchase'];
 
     public $timestamps = false;
 
     public function getTotalAttribute()
+    {
+        return $this->stock->product->price * $this->quantity;
+    }
+
+    public function getTotalPurchaseAttribute()
     {
         return $this->stock->purchase_price * $this->quantity;
     }
