@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * App\Transaction
  * 
  * @property string $type
+ * @property Stock $stock
  */
 class Transaction extends Model
 {
@@ -34,7 +35,7 @@ class Transaction extends Model
         //     $item['total'] = $item['price'] * $item['quantity'];
         // });
     
-        static::created(function ($item) {
+        static::created(function (Transaction $item) {
             if ($item->type == 'in') {
                 $item->stock()->create([
                     'product_id' => $item->product_id,
@@ -58,6 +59,17 @@ class Transaction extends Model
                         if ($qty == 0) break;
                     }
                 }
+            }
+        });
+        static::updated(function (Transaction $item) {
+            if ($item->type == 'in') {
+                $item->stock->update([
+                    'product_id' => $item->product_id,
+                    'purchase_price' => $item->price,
+                    'stock' => $item->quantity,
+                ]);
+            } else {
+                // TODO
             }
         });
     }

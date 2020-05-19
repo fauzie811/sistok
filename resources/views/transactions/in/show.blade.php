@@ -68,6 +68,15 @@ Detail Barang Masuk - #{{ $transaction->id }}
                             </div>
                         </div>
                     </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-md-6 offset-md-4">
+                            @if (sizeof($transaction->stock->details) == 0)
+                            <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-warning"><i class="far fa-edit"></i> Edit</a>
+                            @else
+                            <small>Data transaksi sudah tidak bisa diedit.</small>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div><!-- /.card -->
         </div>

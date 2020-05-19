@@ -38,7 +38,6 @@ Data Barang Keluar - {{ date('Y-m-d') }}
                                             class="far fa-eye"></i></a>
                                     {{-- <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-sm btn-warning"><i
                                             class="far fa-edit"></i></a> --}}
-                                    @can('admin')
                                     <form class="delete-form d-inline-block" action="{{ route('transactions.destroy', $transaction->id) }}"
                                         method="post">
                                         {{ csrf_field() }}
@@ -47,7 +46,6 @@ Data Barang Keluar - {{ date('Y-m-d') }}
                                             <i class="far fa-trash-alt"></i>
                                         </button>
                                     </form>
-                                    @endcan
                                 </td>
                             </tr>
                             @endforeach

@@ -79,6 +79,8 @@ class TransactionController extends Controller
     {
         if ($transaction->type == 'out') {
             $transaction->load(['details', 'details.stock']);
+        } else {
+            $transaction->load(['stock', 'stock.details']);
         }
         
         return view("transactions.{$transaction->type}.show", compact('transaction'));
@@ -92,7 +94,13 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        //
+        if ($transaction->type == 'out' || sizeof($transaction->stock->details) > 0) {
+            return \redirect()->back()->withErrors([
+                'transaction_not_editable' => 'Data transaksi sudah tidak bisa diedit.'
+            ]);
+        }
+
+        return view("transactions.{$transaction->type}.edit", compact('transaction'));
     }
 
     /**
@@ -104,7 +112,23 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        //
+        if ($transaction->type == 'out' || sizeof($transaction->stock->details) > 0) {
+            return \redirect()->back()->withErrors([
+                'transaction_not_editable' => 'Data transaksi sudah tidak bisa diedit.'
+            ]);
+        }
+        $this->validate($request, [
+            'date' => ['nullable', 'date'],
+            'product_id' => ['nullable', 'exists:products,id'],
+            'price' => ['nullable', 'numeric'],
+            'quantity' => ['nullable', 'numeric'],
+        ]);
+
+        if ($transaction->type == 'in') {
+            $transaction->update($request->only(['date', 'product_id', 'price', 'quantity']));
+        }
+
+        return \redirect()->route('transactions.show', $transaction->id);
     }
 
     /**
@@ -115,6 +139,21 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
+        if ($transaction->type == 'in' && sizeof($transaction->stock->details) > 0) {
+            return \redirect()->back()->withErrors([
+                'transaction_not_deleteable' => 'Data transaksi sudah tidak bisa dihapus.'
+            ]);
+        }
+        if ($transaction->type == 'in') {
+            $transaction->stock->delete();
+        } else {
+            foreach ($transaction->details as $detail) {
+                $detail->stock->update([
+                    'stock' => $detail->stock->stock + $detail->quantity,
+                ]);
+                $detail->delete();
+            }
+        }
         $transaction->delete();
 
         return redirect()->back();

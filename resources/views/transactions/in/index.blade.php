@@ -36,9 +36,9 @@ Data Barang Masuk - {{ date('Y-m-d') }}
                                 <td class="text-right">
                                     <a href="{{ route('transactions.show', $transaction->id) }}" class="btn btn-sm btn-info"><i
                                             class="far fa-eye"></i></a>
-                                    {{-- <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-sm btn-warning"><i
-                                            class="far fa-edit"></i></a> --}}
-                                    @can('admin')
+                                    @if (sizeof($transaction->stock->details) == 0)                                        
+                                    <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-sm btn-warning"><i
+                                            class="far fa-edit"></i></a>
                                     <form class="delete-form d-inline-block" action="{{ route('transactions.destroy', $transaction->id) }}"
                                         method="post">
                                         {{ csrf_field() }}
@@ -47,7 +47,7 @@ Data Barang Masuk - {{ date('Y-m-d') }}
                                             <i class="far fa-trash-alt"></i>
                                         </button>
                                     </form>
-                                    @endcan
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

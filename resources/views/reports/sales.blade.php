@@ -101,7 +101,7 @@ Laporan Penjualan - {{ $date_start }} - {{ $date_end }}
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td class="text-right">
+                        <td class="text-right text-nowrap">
                             <strong>{{ rupiah($total_profit) }}</strong>
                         </td>
                     </tr>
