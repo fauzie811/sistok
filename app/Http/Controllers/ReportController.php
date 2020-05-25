@@ -29,7 +29,7 @@ class ReportController extends Controller
         $old_transactions_in = Transaction::where('type', 'in')->whereBetween('date', [$old_date_start, $old_date_end])->get();
         $old_transactions_out = Transaction::where('type', 'out')->whereBetween('date', [$old_date_start, $old_date_end])->get();
         $old_expenses = Expense::whereBetween('date', [$old_date_start, $old_date_end])->get();
-        $old_balance = $old_transactions_in->sum('total') - $old_transactions_out->sum('total') - $old_expenses->sum('amount');
+        $old_balance = $old_transactions_out->sum('total') - $old_transactions_in->sum('total') - $old_expenses->sum('amount');
 
         $transactions = Transaction::with('product')->whereBetween('date', [$date_start, $date_end])->get();
         $expenses = Expense::whereBetween('date', [$date_start, $date_end])->get();

@@ -68,7 +68,7 @@ Laporan Keuangan - {{ $date_start }} - {{ $date_end }}
                     <?php
                     if ($item instanceof App\Expense) {
                         $last_balance -= $item->amount;
-                    } elseif ($item->type == 'in') {
+                    } elseif ($item->type == 'out') {
                         $last_balance += $item->total;
                     } else {
                         $last_balance -= $item->total;
@@ -81,21 +81,21 @@ Laporan Keuangan - {{ $date_start }} - {{ $date_end }}
                             @if ($item instanceof App\Expense)
                             <strong>Pengeluaran Lain: </strong><br>{{ $item->description }}
                             @else
-                            @if ($item->type == 'in')
+                            @if ($item->type == 'out')
                                 <strong>Jual: </strong><br>{{ $item->product->name }}
                             @else
                                 <strong>Beli: </strong><br>{{ $item->product->name }}
                             @endif
                             @endif
                         </td>
-                        @if ($item instanceof App\Transaction && $item->type == 'in')
+                        @if ($item instanceof App\Transaction && $item->type == 'out')
                         <td data-order="{{ $item->total }}" class="text-right text-nowrap">
                             {{ rupiah($item->total) }}
                         </td>
                         @else
                         <td></td>
                         @endif
-                        @if ($item instanceof App\Transaction && $item->type == 'out')
+                        @if ($item instanceof App\Transaction && $item->type == 'in')
                         <td data-order="{{ $item->total }}" class="text-right text-nowrap">
                             {{ rupiah($item->total) }}
                         </td>
